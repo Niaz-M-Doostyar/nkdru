@@ -1,0 +1,11 @@
+config.inc.php
+cache/*
+!cache/.gitkeep
+files/*
+!files/.gitkeep
+public/*
+!public/.gitkeep
+*.log
+.env
+.env.*
+.DS_Store

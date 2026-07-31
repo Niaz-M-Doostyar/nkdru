@@ -1,0 +1,6 @@
+.git
+config.inc.php
+cache
+files
+public
+*.log
