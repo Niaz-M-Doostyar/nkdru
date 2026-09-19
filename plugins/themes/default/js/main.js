@@ -10,7 +10,6 @@
 (function($) {
 
 	// Initialize dropdown navigation menus on large screens
-	// See bootstrap dropdowns: https://getbootstrap.com/docs/4.0/components/dropdowns/
 	if (typeof $.fn.dropdown !== 'undefined') {
 		var $nav = $('#navigationPrimary, #navigationUser'),
 		$submenus = $('ul', $nav);
@@ -39,7 +38,7 @@
 					$(this).siblings('a')
 						.removeAttr('data-toggle')
 						.removeAttr('aria-haspopup')
-						.removeAttr('aria-expanded',)
+						.removeAttr('aria-expanded')
 						.removeAttr('id')
 						.attr('href', '#');
 				});
@@ -53,8 +52,8 @@
 
 	// Toggle nav menu on small screens
 	$('.pkp_site_nav_toggle').click(function(e) {
-  		$('.pkp_site_nav_menu').toggleClass('pkp_site_nav_menu--isOpen');
-  		$('.pkp_site_nav_toggle').toggleClass('pkp_site_nav_toggle--transform');
+		$('.pkp_site_nav_menu').toggleClass('pkp_site_nav_menu--isOpen');
+		$('.pkp_site_nav_toggle').toggleClass('pkp_site_nav_toggle--transform');
 	});
 
 	// Modify the Chart.js display options used by UsageStats plugin
@@ -78,7 +77,6 @@
 	}
 
 	// Show or hide the reviewer interests field on the registration form
-	// when a user has opted to register as a reviewer.
 	function reviewerInterestsToggle() {
 		var is_checked = false;
 		$('#reviewerOptinGroup').find('input').each(function() {
@@ -97,6 +95,7 @@
 	reviewerInterestsToggle();
 	$('#reviewerOptinGroup input').on('click', reviewerInterestsToggle);
 
+	// Initialize Swiper for highlights
 	var swiper = new Swiper('.swiper', {
 		a11y: {
 			prevSlideMessage: pkpDefaultThemeI18N.prevSlide,
@@ -111,6 +110,103 @@
 			el: '.swiper-pagination',
 			type: 'bullets',
 		}
+	});
+
+	// ========================================
+	// CUSTOM: Homepage Carousel
+	// ========================================
+	$(document).ready(function() {
+		var carousel = document.querySelector('.carousel');
+		var slides = document.querySelectorAll('.carousel-slide');
+
+		if (!slides.length || !carousel) {
+			return;
+		}
+
+		// PRELOAD ALL IMAGES - prevents blink when switching slides
+		slides.forEach(function(slide) {
+			var img = slide.querySelector('img');
+			if (img && img.src) {
+				var preload = new Image();
+				preload.src = img.src;
+			}
+		});
+
+		var current = 0;
+		var autoplayInterval = null;
+		var autoplayDelay = 5000;
+		var isAnimating = false;
+
+		function showSlide(index) {
+			// Prevent double-triggering during transition
+			if (isAnimating) return;
+			isAnimating = true;
+
+			if (index >= slides.length) {
+				index = 0;
+			} else if (index < 0) {
+				index = slides.length - 1;
+			}
+
+			slides.forEach(function(slide) {
+				slide.classList.remove('active');
+			});
+
+			slides[index].classList.add('active');
+			current = index;
+
+			// Release lock after transition completes (0.6s + buffer)
+			setTimeout(function() {
+				isAnimating = false;
+			}, 650);
+		}
+
+		function nextSlide() {
+			showSlide(current + 1);
+		}
+
+		function prevSlide() {
+			showSlide(current - 1);
+		}
+
+		function startAutoplay() {
+			stopAutoplay();
+			autoplayInterval = setInterval(nextSlide, autoplayDelay);
+		}
+
+		function stopAutoplay() {
+			if (autoplayInterval) {
+				clearInterval(autoplayInterval);
+				autoplayInterval = null;
+			}
+		}
+
+		// Next button
+		var nextBtn = carousel.querySelector('.carousel-next');
+		if (nextBtn) {
+			nextBtn.addEventListener('click', function(e) {
+				e.preventDefault();
+				nextSlide();
+				startAutoplay();
+			});
+		}
+
+		// Prev button
+		var prevBtn = carousel.querySelector('.carousel-prev');
+		if (prevBtn) {
+			prevBtn.addEventListener('click', function(e) {
+				e.preventDefault();
+				prevSlide();
+				startAutoplay();
+			});
+		}
+
+		// Pause on hover
+		carousel.addEventListener('mouseenter', stopAutoplay);
+		carousel.addEventListener('mouseleave', startAutoplay);
+
+		// Start
+		startAutoplay();
 	});
 
 })(jQuery);

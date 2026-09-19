@@ -5,10 +5,9 @@
  * Copyright (c) 2003-2021 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
- * @brief Common variables used through the the theme styles. They provide a
- *  fully separated interface for defining variables, so that changes desired on
- *  the frontend won't impact the backend.
+ * @brief Common variables used through the the theme styles.
  */
+
 //
 // Colors
 //
@@ -38,12 +37,6 @@
 //
 // Spacing
 //
-// The baseline size should be used to achieve consistent vertical rhythm. All
-// vertical margins, padding, line-height and block heights should use a
-// multiple of this baseline (or half). Where appropriate, horizontal
-// spacings should also use this baseline. However, in some cases with inline
-// elements it is more appropriate to use an `em` spacing.
-//
 @rem:                    14px;
 @base:                   0.714rem;
 @half:                   0.357rem;
@@ -61,7 +54,7 @@
 @line-sml:               1.43rem;
 @font-base:              1rem;
 @line-base:              1.43rem;
-@line-base-large:        1.785rem; // large blocks of text
+@line-base-large:        1.785rem;
 @font-bump:              1.143rem;
 @line-bump:              1.43rem;
 @font-lead:              1.285rem;
@@ -97,7 +90,28 @@
 @logo-height:                 8.571rem;
 
 // Base URL
-// The base URL is set appropriately before the LESS stylesheet is compiled and
-// will point to the theme's base directory. The variable can be used to point
-// to image and font assets.
 @base-url:                   ''; // Leave empty
+
+// ========================================
+// CUSTOM NARANJ VARIABLES
+// ========================================
+
+// Custom color palette
+@naranj-primary:         #1a5f7a;
+@naranj-primary-dark:    #7bafc5;
+@naranj-primary-light:   #e8f4f8;
+@naranj-accent:          #e67e22;
+@naranj-accent-dark:     #b85e0a;
+
+// Wider max-width for containers
+@naranj-max-width:       1400px;
+@naranj-content-padding: 30px;
+
+// Shadows
+@naranj-shadow-sm:       0 2px 5px rgba(0,0,0,0.05);
+@naranj-shadow-md:       0 5px 15px rgba(0,0,0,0.08);
+@naranj-shadow-hover:    0 10px 25px rgba(0,0,0,0.1);
+
+// Transition
+@naranj-transition:      all 0.3s ease;
+

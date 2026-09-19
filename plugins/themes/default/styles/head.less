@@ -1,132 +1,267 @@
 /**
  * @file plugins/themes/default/styles/head.less
  *
- * Copyright (c) 2014-2021 Simon Fraser University
- * Copyright (c) 2003-2021 John Willinsky
- * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
- *
- * @ingroup pkp_structure_head
- *
- * @brief Classes for the page header structural elements
+ * @brief Header: logo, title, admin (row 1) | navigation, search (row 2)
  */
 @nav-menu-height: @quadruple;
 
-// Structural components of the header layout
+// ========================================
+// HEADER BACKGROUND - Academic gradient
+// ========================================
 .pkp_structure_head {
-	background-color: @bg-base;
-	border-bottom: @bg-border;
+	background: linear-gradient(135deg, @naranj-primary-dark 0%, @naranj-primary 50%, lighten(@naranj-primary, 5%) 100%);
+	border-bottom: 3px solid @naranj-accent;
+	box-shadow: @naranj-shadow-md;
+	width: 100%;
 }
 
+// ========================================
+// HEADER WRAPPER
+// ========================================
 .pkp_head_wrapper {
 	position: relative;
-}
+	width: 100%;
+	margin: 0 auto;
+	padding: @base;
 
-.pkp_site_name_wrapper {
-	height: @nav-menu-height;
+	@media( min-width: @screen-tablet ) {
+		width: @screen-tablet-container;
+		padding: @base 0;
+	}
 
-	@media (min-width: @screen-desktop) {
-		height: auto;
+	@media( min-width: @screen-desktop ) {
+		width: @screen-desktop-container;
+		padding: @triple 0 @base 0;
+	}
+
+	@media( min-width: @screen-lg-desktop ) {
+		width: @screen-lg-desktop-container;
 	}
 }
 
-// Site logo/name
+// CUSTOM: Wider header
+@media( min-width: 1300px ) {
+	.pkp_head_wrapper {
+		max-width: @naranj-max-width;
+		width: 100%;
+	}
+}
+
+@media( min-width: 1600px ) {
+	.pkp_head_wrapper {
+		max-width: 1500px;
+		width: 100%;
+	}
+}
+
+// ========================================
+// ROW 1: Logo (left) | Title (center) | Admin (right)
+// ========================================
+.pkp_site_name_wrapper {
+	position: relative;
+	width: 100%;
+	min-height: 100px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	@media( min-width: @screen-desktop ) {
+		min-height: 130px;
+	}
+}
+
+// Hamburger toggle - hidden on desktop
+.pkp_site_nav_toggle {
+	display: none !important;
+}
+
+// Site name / title - centered with logo on left
 .pkp_site_name {
-	position: absolute;
-	left: @nav-menu-height;
-	right: 0;
-	margin-top: 0;
-	margin-bottom: 0;
-	padding-left: @base;
-	text-align: left;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	text-align: center;
+	margin: 0;
+	padding: 0 180px;
 	color: @text-bg-base;
-	font-family: @font-site-title;
-	font-size: @font-sml;
+	font-family: 'Merriweather', Georgia, serif;
+	font-weight: @bold;
+	text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 
 	> a {
-		padding-top: @base;
-		padding-bottom: @base;
+		color: @text-bg-base !important;
+		text-decoration: none;
+		transition: @naranj-transition;
 
-		&:focus {
-			outline: 0;
-		}
-	}
-
-	.is_img {
-		display: inline-block;
-		margin-top: @half;
-		margin-bottom: @half;
-		padding: 0;
-
-		&:focus {
-			outline: 1px solid @text-bg-base;
+		&:hover {
+			color: #ffdd99 !important;
+			text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
 		}
 
-		img {
-			display: block;
-			max-height: @nav-menu-height - @base;
-			max-width: 100%;
-			width: auto;
-			height: auto;
+		&:focus {
+			outline: 2px solid #ffdd99;
+			outline-offset: 4px;
 		}
 	}
 
 	.is_text {
-		font-family: @font-site-title;
-		font-size: @font-sml;
+		font-family: 'Merriweather', Georgia, serif;
+		font-size: 1.3rem;
 		font-weight: @bold;
-		line-height: @nav-menu-height;
+		line-height: 1.4;
 		color: @text-bg-base;
 		text-decoration: none;
+		white-space: normal;
+		word-break: break-word;
+		letter-spacing: 0.5px;
+		transition: @naranj-transition;
 
-		&:focus {
-			text-decoration: underline;
+		&:hover {
+			color: #ffdd99;
+		}
+	}
+
+	.is_img {
+		position: absolute;
+		left: 0;
+		top: 50%;
+		transform: translateY(-50%);
+		margin: 0;
+		padding: 10px;
+		background: rgba(255,255,255,0.1);
+		border-radius: 12px;
+		transition: @naranj-transition;
+
+		&:hover {
+			background: rgba(255,255,255,0.2);
+			transform: translateY(-50%) scale(1.03);
+		}
+
+		img {
+			display: block;
+			max-height: 90px;
+			width: auto;
+			height: auto;
+			border-radius: 4px;
+		}
+	}
+
+	@media( min-width: @screen-desktop ) {
+		padding: 0 220px;
+
+		.is_text {
+			font-size: 2rem;
+		}
+
+		.is_img {
+			padding: 15px;
+
+			img {
+				max-height: 110px;
+			}
 		}
 	}
 }
 
-.pkp_navigation_primary_wrapper {
-	padding-left: 0;
-	padding-right: 0;
-}
-
-// Mobile navigation menu
-.pkp_site_nav_menu {
+// ========================================
+// USER/ADMIN MENU - Top right with academic styling
+// ========================================
+.pkp_navigation_user_wrapper {
 	position: absolute;
-	width: 100%;
-	top: 100%;
-	background:@bg-base;
-	left: 0;
-	padding: @base;
-	z-index: 9999;
+	top: @base;
+	right: 0;
+	left: auto;
+	transform: none;
+	width: auto;
+	padding: 0;
+	margin: 0;
+	border: none;
+	z-index: 1000;
 
-	.pkp_nav_list {
-		padding-left: 0;
-		margin-left: 0;
+	@media( min-width: @screen-desktop ) {
+		top: @triple;
+		right: 0;
 	}
+}
 
-	ul {
-		&:extend(.pkp_unstyled_list);
+.pkp_navigation_user {
+	display: flex;
+	align-items: center;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	font-size: @font-sml;
 
-		ul {
-			padding-left: 0.5rem;
-		}
-	}
-
-	a {
+	li {
+		position: relative;
 		display: inline-block;
-		padding: 0.125rem 0;
-		color: @text-bg-base;
+	}
+
+	> li > a {
+		padding: 8px 14px;
+		color: rgba(255,255,255,0.9) !important;
 		text-decoration: none;
+		font-weight: 500;
+		line-height: @line-sml;
+		border-radius: 20px;
+		transition: all 0.3s ease;
+		white-space: nowrap;
+		background: transparent;
 
 		&:hover,
 		&:focus {
-			color: @text-bg-base;
-			text-decoration: underline;
+			color: #fff !important;
+			background: rgba(255,255,255,0.15);
+			text-decoration: none;
+			transform: translateY(-1px);
 		}
 	}
+
+	> li:last-child > a {
+		margin-right: 0;
+		padding-right: 14px;
+	}
+
+	.task_count {
+		display: inline-block;
+		width: 22px;
+		height: 22px;
+		margin-left: 6px;
+		border-radius: 50%;
+		background: @naranj-accent;
+		line-height: 22px;
+		text-align: center;
+		font-size: 0.75rem;
+		font-weight: @bold;
+		color: #fff;
+		transition: @naranj-transition;
+	}
+
+	> li > a:hover .task_count {
+		background: lighten(@naranj-accent, 10%);
+		transform: scale(1.1);
+	}
+
+	> li > a .task_count {
+		display: inline-block;
+	}
+}
+
+// ========================================
+// ROW 2: Navigation (left) | Search (right)
+// ========================================
+.pkp_site_nav_menu {
+	display: block;
+	position: static;
+	width: 100%;
+	top: auto;
+	left: auto;
+	padding: @half 0;
+	margin-top: @base;
+	border-top: 1px solid rgba(255,255,255,0.15);
+	background: transparent;
+	z-index: auto;
 
 	#siteNav {
 		position: absolute;
@@ -135,379 +270,357 @@
 	}
 }
 
-.pkp_navigation_user {
+.pkp_navigation_primary_row {
+	display: block;
+	width: 100%;
+}
 
-	&.pkp_navigation_user {
-		margin-left: auto;
-		margin-right: auto;
-		margin-top: 1rem;
-		padding-top: 1rem;
-		border-top: 1px solid @bg-base-border-color;
-	}
+.pkp_navigation_primary_wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	padding: 0;
+	width: 100%;
+}
 
-	.task_count {
+// Primary nav links - academic style
+.pkp_navigation_primary {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+
+	> li > a {
 		display: inline-block;
-		width: @double;
-		height: @double;
-		margin-left: 0.5em;
-		border-radius: 50%;
-		background: @bg-base-border-color;
-		line-height: @double;
-		text-align: center;
-		font-size: 0.857rem;
+		padding: 8px 18px;
+		color: rgba(255,255,255,0.9) !important;
+		text-decoration: none;
+		font-weight: 500;
+		font-size: 0.95rem;
+		letter-spacing: 0.5px;
+		border-bottom: 3px solid transparent;
+		border-radius: 4px 4px 0 0;
+		transition: all 0.3s ease;
 		position: relative;
-	}
 
-	// Hide the top-level task count in mobile nav
-	> li > a .task_count {
-		display: none;
-	}
-
-	> li > ul a {
-		.task_count {
-			display: inline-block;
-			background: @bg-base-border-color;
-			color: @text-bg-base;
+		&:hover {
+			color: #fff !important;
+			border-bottom-color: @naranj-accent;
+			background: rgba(255,255,255,0.08);
 		}
 
-		&:hover .task_count,
-		&:focus .task_count {
-			background: @text;
+		&:focus {
+			background: rgba(255,255,255,0.15);
+			color: #fff !important;
+			outline: none;
+			border-bottom-color: #ffdd99;
 		}
 	}
 }
 
+// Search link - right side with academic styling
 .pkp_navigation_search_wrapper {
-	margin-top: 1rem;
-	padding-top: 1rem;
-	border-top: 1px solid @bg-base-border-color;
+	margin-left: auto;
+	padding: 0;
+	border: none;
+
+	a {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 18px;
+		color: rgba(255,255,255,0.9) !important;
+		text-decoration: none;
+		font-weight: 500;
+		font-size: 0.95rem;
+		border-radius: 20px;
+		background: rgba(255,255,255,0.1);
+		transition: all 0.3s ease;
+		letter-spacing: 0.5px;
+
+		&:hover {
+			color: #fff !important;
+			background: @naranj-accent;
+			transform: translateY(-1px);
+			box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+		}
+
+		&:focus {
+			outline: none;
+			background: @naranj-accent;
+			color: #fff !important;
+		}
+	}
 }
 
-// The padding to apply to top-level items in the navigation row
-// Total height - line height (divided by 2 since it will be applied to top and bottom)
-@pkp_nav_primary_row_el_padding: @base;
+// ========================================
+// NAV LIST DROPDOWNS - Academic styling
+// ========================================
+.pkp_nav_list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
 
-@media (min-width: @screen-desktop) {
-	.pkp_head_wrapper {
-		padding-top: @triple * 2; // Make room for the user nav at the top
-	}
-
-	.pkp_site_nav_toggle {
-		display: none;
-	}
-
-	.pkp_site_name {
+	li {
 		position: relative;
-		width: 100%;
-		left: auto;
-		right: auto;
-		padding: 0;
-		white-space: normal;
-		font-size: 2em; // Prevents extra vertical space after logos
-		background: transparent;
-		overflow: visible;
-
-		.is_text {
-			font-family: @font-site-title;
-			font-size: @font-header;
-			line-height: @line-header;
-		}
-
-		.is_img img {
-			max-height: 80px; // must match height - padding of .is_img
-		}
+		display: inline-block;
 	}
 
-	.pkp_site_nav_menu {
-		display: block;
-		position: static;
-		top: auto;
-		padding: 0;
-
-		ul ul {
-			padding-left: 0;
-		}
-	}
-
-	// Site logo/nav on same line on larger screens
-	.has_site_logo .pkp_head_wrapper {
-		padding-top: @triple;
-	}
-
-	.pkp_nav_list {
-		margin: 0;
-		padding: 0;
+	ul {
+		position: absolute;
+		top: 100%;
+		left: -9999px;
+		z-index: 1000;
+		width: 16em;
+		margin: 4px 0 0 0;
+		padding: 8px 0;
+		background: @bg;
+		border-radius: 8px;
+		box-shadow: 0 8px 30px rgba(0,0,0,0.15);
 		list-style: none;
+		border: 1px solid @bg-border-color;
 
 		li {
-			position: relative;
-			display: inline-block;
+			display: block;
 		}
 
 		a {
-			display: inline-block;
-			padding-left: @base;
-			padding-right: @base;
-			text-decoration: none;
-			padding-top: @half;
-			padding-bottom: @half;
+			display: block;
+			padding: 10px 20px;
+			border-left: 4px solid transparent;
+			color: @text !important;
+			font-weight: 500;
+			font-size: 0.9rem;
+			transition: all 0.2s ease;
 
 			&:hover,
 			&:focus {
-				text-decoration: none;
+				background: lighten(@naranj-primary-light, 2%);
+				border-left-color: @naranj-accent;
+				color: @naranj-primary-dark !important;
+				padding-left: 24px;
 			}
 		}
 
-		ul {
-			position: absolute;
-			top: 100%;
-			left: -9999px;
-			z-index: 1000;
-			width: 15em;
-			margin: 0;
-			padding: 0;
-			background: @bg;
-			border-radius: @radius;
-			box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+		li:first-child a {
+			border-radius: 8px 8px 0 0;
+		}
 
-			li {
-				display: block;
+		li:last-child a {
+			border-radius: 0 0 8px 8px;
+		}
+	}
+
+	> li:hover > ul {
+		left: 0;
+		animation: dropdownFadeIn 0.2s ease;
+	}
+
+	[aria-haspopup]:after {
+		position: relative;
+		display: inline-block;
+		content: "";
+		width: 0;
+		height: 0;
+		margin-left: 6px;
+		border-top: 4px solid;
+		border-right: 4px solid transparent;
+		border-left: 4px solid transparent;
+		vertical-align: middle;
+		overflow: hidden;
+		transition: transform 0.2s ease;
+	}
+
+	> li:hover [aria-haspopup]:after {
+		transform: rotate(180deg);
+	}
+}
+
+@keyframes dropdownFadeIn {
+	from { opacity: 0; transform: translateY(-8px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+// Bootstrap dropdown
+.dropdown-menu {
+	display: none;
+
+	&.show {
+		display: block;
+	}
+}
+
+[data-toggle="dropdown"]:hover + .dropdown-menu,
+.dropdown-menu:hover {
+	display: block;
+}
+
+// ========================================
+// MOBILE (under 992px)
+// ========================================
+@media( max-width: (@screen-desktop - 1px) ) {
+	.pkp_head_wrapper {
+		padding: @half @base;
+	}
+
+	.pkp_site_name_wrapper {
+		min-height: 60px;
+		justify-content: flex-start;
+		padding-left: 0;
+	}
+
+	.pkp_site_name {
+		padding: 0 50px 0 0;
+		justify-content: flex-start;
+		text-align: left;
+
+		.is_img {
+			position: static;
+			transform: none;
+			margin-right: @base;
+			background: none;
+			padding: 0;
+
+			&:hover {
+				background: none;
+				transform: none;
+			}
+
+			img {
+				max-height: 50px;
+			}
+		}
+
+		.is_text {
+			font-size: 1rem;
+		}
+	}
+
+	.pkp_site_nav_toggle {
+		display: inline-flex !important;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		right: 0;
+		top: 50%;
+		transform: translateY(-50%);
+		background: rgba(255,255,255,0.15);
+		border: 1px solid rgba(255,255,255,0.3);
+		border-radius: 8px;
+		padding: 10px 14px;
+		color: @text-bg-base;
+		cursor: pointer;
+		z-index: 10;
+		font-size: 1.2rem;
+		transition: @naranj-transition;
+
+		&:hover {
+			background: rgba(255,255,255,0.25);
+		}
+	}
+
+	.pkp_navigation_user_wrapper {
+		display: none;
+	}
+
+	.pkp_site_nav_menu {
+		display: none;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		width: 100%;
+		padding: @base;
+		background: @naranj-primary-dark;
+		z-index: 9999;
+		border-top: 2px solid @naranj-accent;
+		margin-top: 0;
+
+		&.pkp_site_nav_menu--isOpen {
+			display: block;
+			animation: dropdownFadeIn 0.3s ease;
+		}
+
+		.pkp_nav_list {
+			padding: 0;
+			margin: 0;
+
+			ul {
+				padding-left: 1rem;
+				position: static;
+				left: auto;
+				width: auto;
+				background: transparent;
+				box-shadow: none;
+				border: none;
+				margin: 0;
+
+				a {
+					color: rgba(255,255,255,0.8) !important;
+					border-left: 2px solid rgba(255,255,255,0.2);
+
+					&:hover {
+						background: rgba(255,255,255,0.1);
+						border-left-color: @naranj-accent;
+						color: #fff !important;
+					}
+				}
 			}
 
 			a {
 				display: block;
-				padding-left: @half;
-				border-left: @half solid transparent;
-				color: @primary;
-
-				&:hover,
-				&:focus {
-					outline: 0;
-					background: @bg-shade;
-					border-color: @primary;
-					color: @primary;
-				}
-			}
-
-			li:first-child a {
-				border-top-left-radius: @radius;
-				border-top-right-radius: @radius;
-			}
-
-			li:last-child a {
-				border-bottom-left-radius: @radius;
-				border-bottom-right-radius: @radius;
-			}
-		}
-
-		> li:hover ul {
-			left: 0;
-		}
-
-		[aria-haspopup]:after {
-			position: relative;
-			display: inline-block;
-			content: "";
-			width: 0;
-			height: 0;
-			margin-left: 0.25em;
-			border-top: 4px solid;
-			border-right: 4px solid transparent;
-			border-left: 4px solid transparent;
-			vertical-align: middle;
-			overflow: hidden;
-		}
-	}
-
-	// Primary site navigation menu
-	.pkp_navigation_primary {
-		text-align: center;
-
-		> li {
-			> a {
-				margin: @half 0.5em 0;
-				padding: @half 0.5em
-					calc(~"@{pkp_nav_primary_row_el_padding} - 2px"); // -2 to account for border size
-				border-bottom: 2px solid transparent;
-				color: @text-bg-base;
-				text-decoration: none;
+				padding: 12px @base;
+				color: @text-bg-base !important;
+				border-radius: 6px;
+				font-size: 1rem;
 
 				&:hover {
-					color: @text-bg-base;
-					outline: 0;
-					border-color: @text-bg-base;
-				}
-
-				&:focus {
-					background: @text-bg-base;
-					color: @bg-base;
-					outline: 0;
-				}
-			}
-
-			&:first-child {
-				a {
-					margin-left: -0.5em;
-				}
-			}
-
-			&:last-child {
-				a {
-					margin-right: -0.5em;
+					background: rgba(255,255,255,0.1);
+					text-decoration: none;
 				}
 			}
 		}
-
-		// Reproduce positioning of dropdown menu from Popper.js
-		> li:hover ul {
-			position: absolute;
-			transform: translate3d(7px, 40px, 0px);
-			top: 0;
-			left: 0;
-			will-change: transform;
-		}
-
-		ul a {
-			padding-top: @base;
-			padding-bottom: @base;
-		}
-
-		[aria-haspopup]:hover {
-			border-color: transparent;
-		}
-
-		.dropdown-menu a:focus,
-		.dropdown-menu a:hover {
-			border-color: @primary;
-		}
-
-		@media (min-width: @screen-desktop) {
-			display: inline-block;
-			max-width: 80%;
-			text-align: left;
-		}
 	}
 
-	// Bootstrap dropdown components
-	.dropdown-menu {
-		display: none;
-
-		&.show {
-			display: block;
-		}
+	.pkp_navigation_primary_wrapper {
+		flex-direction: column;
+		align-items: flex-start;
 	}
 
-	[data-toggle="dropdown"]:hover + .dropdown-menu,
-	.dropdown-menu:hover {
-		display: block;
-	}
+	.pkp_navigation_primary {
+		flex-direction: column;
+		align-items: flex-start;
+		width: 100%;
 
-	// User-focused navigation menu
-	.pkp_navigation_user_wrapper {
-		position: absolute;
-		top: 0;
-		left: 50%;
-		transform: translateX(-50%);
-		padding-left: @base;
-		padding-right: @base;
-		text-align: right;
-		padding-top: 0;
-		margin-top: 0;
-		border-top: none;
-		z-index: 1000;
-	}
+		> li > a {
+			border-bottom: none;
+			border-left: 3px solid transparent;
+			border-radius: 0 6px 6px 0;
 
-	.pkp_navigation_user {
-		text-align: right;
-		font-size: @font-sml;
-		padding-right: @double;
-
-		&.pkp_navigation_user {
-			margin: 0;
-			padding: 0;
-			border: none;
-		}
-
-		li {
-			text-align: left;
-		}
-
-		a {
-			padding-top: @half;
-			padding-bottom: @half;
-			line-height: @line-sml;
-		}
-
-		> li > a:focus {
-			outline: 0;
-			background: @text-bg-base;
-			color: @bg-base;
-		}
-
-		ul {
-			width: 10em;
-		}
-
-		// Reproduce positioning of dropdown menu from Popper.js
-		// There can still be some shifting when the parent item is focused
-		// because Popper.js will adjust if it is too close to the edge of
-		// the screen.
-		> li:hover ul {
-			position: absolute;
-			top: 0;
-			left: 0;
-			transform: translate3d(0px, 30px, 0px);
-			will-change: transform;
-		}
-
-		// Align to the right edge of the container
-		> li:last-child > a {
-			margin-right: -@base;
-		}
-
-		// Show the top-level task count in desktop nav
-		> li > a .task_count {
-			display: inline-block;
-		}
-
-		> li > a:focus .task_count {
-			background: @bg-base;
-			color: @text-bg-base;
-		}
-
-		> li > ul a {
-			.task_count {
-				display: none;
+			&:hover {
+				border-left-color: @naranj-accent;
+				border-bottom-color: transparent;
 			}
 		}
 	}
 
 	.pkp_navigation_search_wrapper {
-		float: right;
-		margin: 0;
-		padding: 0;
-		border: none;
+		margin: @base 0 0 0;
+		padding-top: @base;
+		border-top: 1px solid rgba(255,255,255,0.15);
+		width: 100%;
+		margin-left: 0;
 
 		a {
-			margin: @half 0.5em 0;
-			padding: @half 0.5em
-				calc(~"@{pkp_nav_primary_row_el_padding} - 2px"); // -2 to account for border size
-			border-bottom: 2px solid transparent;
-			color: @text-bg-base;
-			text-decoration: none;
+			width: 100%;
+			justify-content: center;
+			background: @naranj-accent;
+			color: #fff !important;
+			border-radius: 8px;
 
 			&:hover {
-				color: @text-bg-base;
-				outline: 0;
-				border-color: @text-bg-base;
-				text-decoration: none;
-			}
-
-			&:focus {
-				background: @text-bg-base;
-				color: @bg-base;
-				outline: 0;
-				text-decoration: none;
+				background: lighten(@naranj-accent, 8%);
 			}
 		}
 	}

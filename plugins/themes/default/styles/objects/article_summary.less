@@ -11,6 +11,22 @@
 .obj_article_summary {
 	.pkp_helpers_clear();
 
+	// CUSTOM: Card style
+	background: #fff;
+	border-radius: 12px;
+	padding: 25px;
+	margin-bottom: 25px;
+	box-shadow: @naranj-shadow-sm;
+	transition: @naranj-transition;
+	border: 1px solid @bg-border-color;
+	box-sizing: border-box;
+
+	// CUSTOM: Hover effect
+	&:hover {
+		box-shadow: @naranj-shadow-hover;
+		transform: translateY(-3px);
+	}
+
 	.cover {
 		display: block;
 		margin-bottom: @double;
@@ -23,8 +39,8 @@
 	}
 
 	> .title {
-		font-family: @font-heading;
-		font-size: @font-base;
+		font-family: 'Merriweather', Georgia, serif;
+		font-size: 1.3rem;
 		line-height: @line-base;
 		font-weight: @bold;
 		border-bottom: none;
@@ -32,6 +48,11 @@
 
 		a {
 			text-decoration: none;
+			color: @naranj-primary-dark;
+
+			&:hover {
+				color: @naranj-accent;
+			}
 		}
 	}
 
@@ -103,5 +124,14 @@
 				max-height: none;
 			}
 		}
+	}
+
+	@media(max-width: @screen-tablet) {
+		padding: 15px;
+	}
+
+	@media(max-width: @screen-phone) {
+		padding: 12px;
+		margin-bottom: 15px;
 	}
 }

@@ -1,98 +1,108 @@
-// Swiper.js
-.highlights {
-    margin-top: -@base;
-    margin-left: -@double;
-    margin-right: -@double;
-    background: @bg-shade;
+// ========================================
+// CUSTOM: Homepage Carousel - No Blink
+// ========================================
+
+.homepage-carousel {
+    position: relative;
+    width: 100%;
+    margin: 0 auto 50px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: @naranj-shadow-md;
+    max-width: 100%;
 }
 
-.swiper {
-    --swiper-theme-color: @bg-base;
-    --swiper-navigation-size: @triple;
-    --swiper-navigation-sides-offset: @half;
+.carousel {
+    position: relative;
+    width: 100%;
+    /* Set a fixed aspect ratio so height doesn't collapse */
+    aspect-ratio: 16 / 5;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #000;
 }
 
-.swiper-wrapper {
-    margin: 0;
-    padding: 0 0 @quadruple;
-    list-style: none;
-}
+.carousel-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s ease-in-out, visibility 0.6s ease-in-out;
+    z-index: 1;
 
-.swiper-slide-content {
-    padding-left: @triple;
-    padding-right: @triple;
-}
-
-// Extra class to override .pkp_structure_main h3
-.swiper .swiper-slide-title {
-    margin-top: @double;
-}
-
-.swiper-slide-button {
-    display: inline-block;
-    margin-top: @double;
-}
-
-.swiper-button-prev,
-.swiper-button-next {
-    background: transparent;
-    border: none;
-    color: @lift;
-
-    &:focus-visible {
-        outline: 2px solid @lift;
-        outline-offset: @half;
+    &.active {
+        opacity: 1;
+        visibility: visible;
+        z-index: 2;
     }
 }
 
-.swiper-slide-image {
-    width: 100vw;
-    max-height: 50vh;
+.carousel-slide img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    display: block;
+    max-width: 100%;
 }
 
-@media (min-width: @screen-phone) {
+.carousel-prev,
+.carousel-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    padding: 12px 18px;
+    cursor: pointer;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+    width: auto;
+    height: auto;
+    line-height: 1;
+    z-index: 10;
 
-    .highlights {
-        margin-top: -@double;
-        margin-left: -@triple;
-        margin-right: -@triple;
-    }
-
-    .swiper-slide-content {
-        padding-left: @quadruple;
-        padding-right: @quadruple;
-    }
-}
-
-@media (min-width: @screen-tablet) {
-
-    .highlights {
-        margin-top: -@double;
-        margin-left: -@double;
-        margin-right: -@double;
-    }
-
-    // Extra class to override library styles
-    .swiper-slide.-has-image {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .swiper-slide-content {
-        padding-inline-start: @triple;
+    &:hover {
+        background-color: @naranj-accent;
+        border-color: @naranj-accent;
+        transform: translateY(-50%) scale(1.05);
     }
 }
 
-@media (min-width: @screen-desktop) {
+.carousel-prev { left: 20px; }
+.carousel-next { right: 20px; }
 
-    .highlights {
-        margin-top: -(@base * 7);
-        margin-left: -@triple;
-        margin-right: -@triple;
-    }
+// Responsive heights
+@media (min-width: 1600px) {
+    .carousel { aspect-ratio: 16 / 5; }
+}
 
-    .pkp_structure_content.has_sidebar .highlights {
-        margin-top: -@triple;
-    }
+@media (min-width: @screen-desktop) and (max-width: 1199px) {
+    .carousel { aspect-ratio: 16 / 6; }
+}
+
+@media (min-width: @screen-tablet) and (max-width: 991px) {
+    .carousel { aspect-ratio: 16 / 7; }
+    .carousel-prev, .carousel-next { padding: 8px 14px; font-size: 18px; }
+}
+
+@media (min-width: @screen-phone) and (max-width: 767px) {
+    .carousel { aspect-ratio: 16 / 9; }
+    .carousel-prev, .carousel-next { padding: 6px 12px; font-size: 16px; }
+    .carousel-prev { left: 10px; }
+    .carousel-next { right: 10px; }
+}
+
+@media (max-width: 575px) {
+    .homepage-carousel { margin-bottom: 25px; }
+    .carousel { aspect-ratio: 4 / 3; }
+    .carousel-prev, .carousel-next { padding: 5px 10px; font-size: 14px; }
+    .carousel-prev { left: 8px; }
+    .carousel-next { right: 8px; }
 }

@@ -8,7 +8,6 @@
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @class DefaultThemePlugin
- *
  * @brief Default theme
  */
 
@@ -18,6 +17,7 @@ use APP\core\Application;
 use APP\file\PublicFileManager;
 use PKP\config\Config;
 use PKP\core\PKPSessionGuard;
+use PKP\plugins\Hook;
 
 class DefaultThemePlugin extends \PKP\plugins\ThemePlugin
 {
@@ -33,9 +33,7 @@ class DefaultThemePlugin extends \PKP\plugins\ThemePlugin
     }
 
     /**
-     * Initialize the theme's styles, scripts and hooks. This is run on the
-     * currently active theme and it's parent themes.
-     *
+     * Initialize the theme's styles, scripts and hooks.
      */
     public function init()
     {
@@ -45,34 +43,13 @@ class DefaultThemePlugin extends \PKP\plugins\ThemePlugin
             'label' => __('plugins.themes.default.option.typography.label'),
             'description' => __('plugins.themes.default.option.typography.description'),
             'options' => [
-                [
-                    'value' => 'notoSans',
-                    'label' => __('plugins.themes.default.option.typography.notoSans'),
-                ],
-                [
-                    'value' => 'notoSerif',
-                    'label' => __('plugins.themes.default.option.typography.notoSerif'),
-                ],
-                [
-                    'value' => 'notoSerif_notoSans',
-                    'label' => __('plugins.themes.default.option.typography.notoSerif_notoSans'),
-                ],
-                [
-                    'value' => 'notoSans_notoSerif',
-                    'label' => __('plugins.themes.default.option.typography.notoSans_notoSerif'),
-                ],
-                [
-                    'value' => 'lato',
-                    'label' => __('plugins.themes.default.option.typography.lato'),
-                ],
-                [
-                    'value' => 'lora',
-                    'label' => __('plugins.themes.default.option.typography.lora'),
-                ],
-                [
-                    'value' => 'lora_openSans',
-                    'label' => __('plugins.themes.default.option.typography.lora_openSans'),
-                ],
+                ['value' => 'notoSans', 'label' => __('plugins.themes.default.option.typography.notoSans')],
+                ['value' => 'notoSerif', 'label' => __('plugins.themes.default.option.typography.notoSerif')],
+                ['value' => 'notoSerif_notoSans', 'label' => __('plugins.themes.default.option.typography.notoSerif_notoSans')],
+                ['value' => 'notoSans_notoSerif', 'label' => __('plugins.themes.default.option.typography.notoSans_notoSerif')],
+                ['value' => 'lato', 'label' => __('plugins.themes.default.option.typography.lato')],
+                ['value' => 'lora', 'label' => __('plugins.themes.default.option.typography.lora')],
+                ['value' => 'lora_openSans', 'label' => __('plugins.themes.default.option.typography.lora_openSans')],
             ],
             'default' => 'notoSans',
         ]);
@@ -85,50 +62,31 @@ class DefaultThemePlugin extends \PKP\plugins\ThemePlugin
 
         $this->addOption('showDescriptionInJournalIndex', 'FieldOptions', [
             'label' => __('manager.setup.contextSummary'),
-            'options' => [
-                [
-                    'value' => true,
-                    'label' => __('plugins.themes.default.option.showDescriptionInJournalIndex.option'),
-                ],
-            ],
+            'options' => [['value' => true, 'label' => __('plugins.themes.default.option.showDescriptionInJournalIndex.option')]],
             'default' => false,
         ]);
+
         $this->addOption('useHomepageImageAsHeader', 'FieldOptions', [
             'label' => __('plugins.themes.default.option.useHomepageImageAsHeader.label'),
             'description' => __('plugins.themes.default.option.useHomepageImageAsHeader.description'),
-            'options' => [
-                [
-                    'value' => true,
-                    'label' => __('plugins.themes.default.option.useHomepageImageAsHeader.option')
-                ],
-            ],
+            'options' => [['value' => true, 'label' => __('plugins.themes.default.option.useHomepageImageAsHeader.option')]],
             'default' => false,
         ]);
+
         $this->addOption('displayStats', 'FieldOptions', [
             'type' => 'radio',
             'label' => __('plugins.themes.default.option.displayStats.label'),
             'options' => [
-                [
-                    'value' => 'none',
-                    'label' => __('plugins.themes.default.option.displayStats.none'),
-                ],
-                [
-                    'value' => 'bar',
-                    'label' => __('plugins.themes.default.option.displayStats.bar'),
-                ],
-                [
-                    'value' => 'line',
-                    'label' => __('plugins.themes.default.option.displayStats.line'),
-                ],
+                ['value' => 'none', 'label' => __('plugins.themes.default.option.displayStats.none')],
+                ['value' => 'bar', 'label' => __('plugins.themes.default.option.displayStats.bar')],
+                ['value' => 'line', 'label' => __('plugins.themes.default.option.displayStats.line')],
             ],
             'default' => 'none',
         ]);
 
-
         // Load primary stylesheet
         $this->addStyle('stylesheet', 'styles/index.less');
 
-        // Store additional LESS variables to process based on options
         $additionalLessVariables = [];
 
         if ($this->getOption('typography') === 'notoSerif') {
@@ -154,9 +112,8 @@ class DefaultThemePlugin extends \PKP\plugins\ThemePlugin
             $this->addStyle('font', 'styles/fonts/notoSans.less');
         }
 
-        // Update colour based on theme option
         if (($baseColour = $this->getOption('baseColour')) !== '#1E6292') {
-            if (!preg_match('/^#[0-9a-fA-F]{1,6}$/', $baseColour)) $baseColour = '#1E6292'; // pkp/pkp-lib#11974
+            if (!preg_match('/^#[0-9a-fA-F]{1,6}$/', $baseColour)) $baseColour = '#1E6292';
             $additionalLessVariables[] = '@bg-base:' . $baseColour . ';';
             if (!$this->isColourDark($baseColour)) {
                 $additionalLessVariables[] = '@text-bg-base:rgba(0,0,0,0.84);';
@@ -164,114 +121,185 @@ class DefaultThemePlugin extends \PKP\plugins\ThemePlugin
             }
         }
 
-        // Pass additional LESS variables based on options
         if (!empty($additionalLessVariables)) {
             $this->modifyStyle('stylesheet', ['addLessVariables' => join("\n", $additionalLessVariables)]);
         }
 
         $request = Application::get()->getRequest();
 
-        // Load icon font FontAwesome - http://fontawesome.io/
-        $this->addStyle(
-            'fontAwesome',
-            $request->getBaseUrl() . '/lib/pkp/styles/fontawesome/fontawesome.css',
-            ['baseUrl' => '']
-        );
+        $this->addStyle('fontAwesome', $request->getBaseUrl() . '/lib/pkp/styles/fontawesome/fontawesome.css', ['baseUrl' => '']);
 
-        // Get homepage image and use as header background if useAsHeader is true
         $context = Application::get()->getRequest()->getContext();
         if ($context && $this->getOption('useHomepageImageAsHeader') && ($homepageImage = $context->getLocalizedData('homepageImage'))) {
             $publicFileManager = new PublicFileManager();
             $publicFilesDir = $request->getBaseUrl() . '/' . $publicFileManager->getContextFilesPath($context->getId());
             $homepageImageUrl = $publicFilesDir . '/' . $homepageImage['uploadName'];
-
-            $this->addStyle(
-                'homepageImage',
-                '.pkp_structure_head { background: center / cover no-repeat url("' . $homepageImageUrl . '");}',
-                ['inline' => true]
-            );
+            $this->addStyle('homepageImage', '.pkp_structure_head { background: center / cover no-repeat url("' . $homepageImageUrl . '");}', ['inline' => true]);
         }
 
-        // Load jQuery from a CDN or, if CDNs are disabled, from a local copy.
         $min = Config::getVar('general', 'enable_minified') ? '.min' : '';
         $jquery = $request->getBaseUrl() . '/js/build/jquery/jquery' . $min . '.js';
         $jqueryUI = $request->getBaseUrl() . '/js/build/jquery-ui/jquery-ui' . $min . '.js';
-
-        // Use an empty `baseUrl` argument to prevent the theme from looking for
-        // the files within the theme directory
         $this->addScript('jQuery', $jquery, ['baseUrl' => '']);
         $this->addScript('jQueryUI', $jqueryUI, ['baseUrl' => '']);
 
-        // Load Bootsrap's dropdown
         $this->addScript('popper', 'js/lib/popper/popper.js');
         $this->addScript('bsUtil', 'js/lib/bootstrap/util.js');
         $this->addScript('bsDropdown', 'js/lib/bootstrap/dropdown.js');
 
-        // Load Swiper for carousel
         $this->addScript('swiper', 'js/lib/swiper/swiper-bundle' . $min . '.js');
         $this->addStyle('swiper', 'js/lib/swiper/swiper-bundle' . $min . '.css');
         $this->addScript('swiper-i18n', $this->getSwiperI18n(), ['inline' => true]);
 
-        // Load custom JavaScript for this theme
         $this->addScript('default', 'js/main.js');
 
-        // Add navigation menu areas for this theme
+        // ========================================
+        // CUSTOM: Carousel hooks
+        // ========================================
+        // 1. Inject "Carousel Images" section into Settings → Website → Appearance
+        Hook::add('TemplateManager::display', [$this, 'addCarouselToAppearance']);
+        
+        // 2. Load carousel images from DB for the homepage
+        Hook::add('TemplateManager::display', [$this, 'addCarouselImages']);
+
         $this->addMenuArea(['primary', 'user']);
     }
 
-    /**
-     * Get the name of the settings file to be installed on new journal
-     * creation.
-     *
-     * @return string
+        /**
+     * DEBUG VERSION - Inject Carousel Manager tab
      */
+    public function addCarouselToAppearance($hookName, $args)
+    {
+        // DEBUG: Log every time this hook fires
+        $logFile = sys_get_temp_dir() . '/carousel-debug.log';
+        file_put_contents($logFile, 
+            date('Y-m-d H:i:s') . 
+            ' | URI=' . ($_SERVER['REQUEST_URI'] ?? 'NONE') . 
+            ' | TEMPLATE=' . ($args[1] ?? 'NONE') . 
+            "\n", 
+            FILE_APPEND
+        );
+
+        $templateMgr = $args[0];
+        $template = $args[1];
+
+        $request = Application::get()->getRequest();
+        $context = $request->getContext();
+
+        if (!$context) {
+            return false;
+        }
+
+        $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+        if (strpos($requestUri, '/settings/website') === false) {
+            return false;
+        }
+
+        $carouselUrl = $request->getDispatcher()->url(
+            $request,
+            \PKP\core\PKPApplication::ROUTE_PAGE,
+            $context->getPath(),
+            'carousel'
+        );
+
+        $js = '
+        (function() {
+            var carouselUrl = ' . json_encode($carouselUrl) . ';
+            function injectCarouselTab() {
+                if (document.getElementById("carousel-tab-button")) return true;
+                var advancedBtn = document.getElementById("advanced-button");
+                if (!advancedBtn) return false;
+                var newBtn = document.createElement("a");
+                newBtn.id = "carousel-tab-button";
+                newBtn.className = "pkpTabs__button";
+                newBtn.href = carouselUrl;
+                newBtn.style.textDecoration = "none";
+                newBtn.style.display = "inline-block";
+                newBtn.innerHTML = "Carousel Images";
+                advancedBtn.parentNode.insertBefore(newBtn, advancedBtn.nextSibling);
+                return true;
+            }
+            if (injectCarouselTab()) return;
+            var attempts = 0;
+            var timer = setInterval(function() {
+                attempts++;
+                if (injectCarouselTab() || attempts > 50) clearInterval(timer);
+            }, 200);
+        })();
+        ';
+
+        // Add to the template as footer JS
+        $templateMgr->addJavaScript(
+            'carousel-injector',
+            $js,
+            ['inline' => true, 'contexts' => 'backend']
+        );
+
+        return false;
+    }
+
+    /**
+     * Load carousel images from database for the homepage
+     */
+    public function addCarouselImages($hookName, $args)
+    {
+        $templateMgr = $args[0];
+        $template = $args[1];
+
+        if (strpos($template, 'indexJournal.tpl') !== false) {
+            $request = Application::get()->getRequest();
+            $context = $request->getContext();
+
+            if ($context) {
+                try {
+                    $images = \Illuminate\Support\Facades\DB::table('carousel_slides')
+                        ->where('journal_id', $context->getId())
+                        ->where('status', 1)
+                        ->orderBy('display_order', 'asc')
+                        ->pluck('image')
+                        ->toArray();
+
+                    $publicFilesDir = Config::getVar('files', 'public_files_dir');
+                    $carouselBaseUrl = $request->getBaseUrl() . '/' . $publicFilesDir . '/carousel/';
+
+                    $templateMgr->assign('carouselImages', $images);
+                    $templateMgr->assign('carouselBaseUrl', $carouselBaseUrl);
+                } catch (\Exception $e) {
+                    // Table not yet created - assign empty to prevent errors
+                    $templateMgr->assign('carouselImages', []);
+                    $templateMgr->assign('carouselBaseUrl', '');
+                }
+            }
+        }
+
+        return false;
+    }
+
     public function getContextSpecificPluginSettingsFile()
     {
         return $this->getPluginPath() . '/settings.xml';
     }
 
-    /** @see ThemePlugin::saveOption */
     public function saveOption($name, $value, $contextId = null) {
-        // Validate the base colour setting value.
-        if ($name == 'baseColour' && !preg_match('/^#[0-9a-fA-F]{1,6}$/', $value)) $value = null; // pkp/pkp-lib#11974
-
+        if ($name == 'baseColour' && !preg_match('/^#[0-9a-fA-F]{1,6}$/', $value)) $value = null;
         parent::saveOption($name, $value, $contextId);
     }
 
-    /**
-     * Get the name of the settings file to be installed site-wide when
-     * OJS is installed.
-     *
-     * @return string
-     */
     public function getInstallSitePluginSettingsFile()
     {
         return $this->getPluginPath() . '/settings.xml';
     }
 
-    /**
-     * Get the display name of this plugin
-     *
-     * @return string
-     */
     public function getDisplayName()
     {
         return __('plugins.themes.default.name');
     }
 
-    /**
-     * Get the description of this plugin
-     *
-     * @return string
-     */
     public function getDescription()
     {
         return __('plugins.themes.default.description');
     }
 
-    /**
-     * Get the locale strings for the swiper carousel
-     */
     public function getSwiperI18n(): string
     {
         return 'var pkpDefaultThemeI18N = ' . json_encode([

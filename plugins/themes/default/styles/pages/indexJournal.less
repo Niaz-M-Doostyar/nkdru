@@ -1,32 +1,30 @@
 /**
  * @file  plugins/themes/default/styles/pages/indexJournal.less
  *
- * Copyright (c) 2014-2021 Simon Fraser University
- * Copyright (c) 2003-2021 John Willinsky
- * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
- *
  * @brief Styles applying to the front page of the journal
- * @link templates/frontend/pages/indexJournal.tpl
  */
 .pkp_page_index {
 
+	.page_index_journal {
+		width: 100%;
+		max-width: 100%;
+		overflow: hidden;
+	}
+
+	// CUSTOM: Remove negative margins that cause overflow
 	.homepage_image,
 	.additional_content {
-		margin-left: -@base;
-		margin-right: -@base;
-
-		@media (min-width: @screen-phone) {
-			margin-left: -@double;
-			margin-right: -@double;
-		}
-
-		@media (min-width: @screen-desktop) {
-			margin-left: -@triple;
-			margin-right: -@triple;
-		}
+		margin-left: 0;
+		margin-right: 0;
+		width: 100%;
+		max-width: 100%;
 	}
 
 	.homepage_image {
+		margin-bottom: 40px;
+		border-radius: 12px;
+		overflow: hidden;
+		box-shadow: @naranj-shadow-md;
 
 		img {
 			display: block;
@@ -35,16 +33,39 @@
 		}
 
 		@media (min-width: @screen-desktop) {
-			margin-top: -@triple; // flush with top nav
+			margin-top: 0;
 		}
 	}
 
 	.homepage_about {
 		padding-top: @triple;
 		padding-bottom: @triple;
+		background: #fff;
+		border-radius: 12px;
+		padding: 30px;
+		margin-bottom: 30px;
+		box-shadow: @naranj-shadow-sm;
+		width: 100%;
+		box-sizing: border-box;
 
 		h2 {
-			margin-top: -@base
+			margin-top: -@base;
+			border-bottom: 3px solid @naranj-accent;
+			display: inline-block;
+			padding-bottom: 8px;
+			margin-bottom: 20px;
+		}
+
+		@media(max-width: @screen-tablet) {
+			padding: 20px;
+		}
+
+		@media(max-width: @screen-phone) {
+			padding: 15px;
+
+			h2 {
+				font-size: 1.2rem;
+			}
 		}
 	}
 
@@ -76,7 +97,6 @@
 		}
 
 		@media(min-width: @screen-phone) {
-
 			> .obj_announcement_summary,
 			.more .obj_announcement_summary {
 				padding-left: @double;
@@ -85,12 +105,10 @@
 		}
 
 		@media(min-width: @screen-tablet) {
-
 			> .obj_announcement_summary {
 				float: left;
 				width: 65%;
 
-				// Right border
 				&:before {
 					content: ' ';
 					position: absolute;
@@ -108,7 +126,6 @@
 				padding-top: @double;
 				padding-bottom: @double;
 
-				// Left border
 				&:before {
 					content: ' ';
 					position: absolute;
@@ -122,7 +139,6 @@
 		}
 
 		@media(min-width: @screen-desktop) {
-
 			> .obj_announcement_summary,
 			.more .obj_announcement_summary {
 				padding-left: @triple;
@@ -132,10 +148,18 @@
 	}
 
 	.current_issue {
+		background: linear-gradient(120deg, @naranj-primary-light, #fff);
+		padding: 35px;
+		border-radius: 20px;
+		margin: 40px 0;
+		width: 100%;
+		box-sizing: border-box;
 
 		.current_issue_title {
 			margin: @double 0;
 			font-weight: @bold;
+			font-size: 1.4rem;
+			color: @naranj-primary-dark;
 		}
 
 		.read_more {
@@ -144,26 +168,34 @@
 		}
 
 		@media(min-width: @screen-tablet) {
-
 			.section:last-child {
 				margin-bottom: 0;
+			}
+		}
+
+		@media(max-width: @screen-tablet) {
+			padding: 25px;
+		}
+
+		@media(max-width: @screen-phone) {
+			padding: 15px;
+			margin: 20px 0;
+
+			.current_issue_title {
+				font-size: 1.1rem;
 			}
 		}
 	}
 
 	.additional_content {
-		padding: @triple @base 0 @base;
+		padding: 30px;
 		border-top: @bg-border;
-
-		@media (min-width: @screen-phone) {
-			padding-left: @double;
-			padding-right: @double;
-		}
-
-		@media (min-width: @screen-desktop) {
-			padding-left: @triple;
-			padding-right: @triple;
-		}
+		background: #fff;
+		border-radius: 12px;
+		margin-bottom: 30px;
+		box-shadow: @naranj-shadow-sm;
+		width: 100%;
+		box-sizing: border-box;
 
 		> p:first-child {
 			margin-top: 0;
@@ -175,9 +207,18 @@
 	}
 
 	@media(min-width: @screen-tablet) {
-
 		.cmp_announcements + .additional_content {
 			border-top: none;
 		}
 	}
+}
+
+// Announcements accent border
+.announcements {
+	background: #fff;
+	border-left: 5px solid @naranj-accent;
+	padding: 15px 20px;
+	margin-bottom: 20px;
+	border-radius: 0 8px 8px 0;
+	box-sizing: border-box;
 }

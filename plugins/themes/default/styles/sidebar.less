@@ -6,33 +6,61 @@
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @brief Styles for the sidebar blocks
- *
  */
 
 .pkp_block {
-	padding: @triple @double;
-	font-size: @font-base;
-	line-height: @line-base;
+	background: #fff;
+	border-radius: 12px;
+	padding: 20px;
+	margin-bottom: 25px;
+	border: 1px solid @bg-border-color;
+	box-shadow: @naranj-shadow-sm;
+	transition: @naranj-transition;
+
+	&:hover {
+		box-shadow: @naranj-shadow-md;
+	}
 
 	.title {
 		display: block;
-		margin-bottom: @base;
+		margin-bottom: 20px;
 		margin-top: 0;
-		font-family: @font-heading;
-		font-size: @font-bump;
+		font-family: 'Merriweather', Georgia, serif;
+		font-size: 1.2rem;
 		font-weight: @bold;
 		line-height: @line-bump;
-		color: @text-light;
+		color: @naranj-primary-dark;
+		border-bottom: 3px solid @naranj-accent;
+		display: inline-block;
+		padding-bottom: 8px;
 	}
 
 	.content {
 
-		 ul {
+		ul {
 			&:extend(.pkp_unstyled_list);
 
 			li {
 				line-height: @line-base;
 				padding: @half 0;
+
+				a {
+					display: inline-block;
+					padding: 4px 10px;
+					margin: 2px 0;
+					border-radius: 6px;
+					border-left: 3px solid transparent;
+					text-decoration: none;
+					color: @text;
+					transition: all 0.25s ease;
+
+					&:hover {
+						background: @naranj-primary-light;
+						border-left-color: @naranj-accent;
+						color: @naranj-primary-dark;
+						padding-left: 14px;
+					}
+				}
 			}
 		}
 
@@ -46,19 +74,83 @@
 			&:last-child {
 				margin-bottom: 0;
 			}
+
+			a {
+				color: @naranj-primary;
+				text-decoration: underline;
+				text-underline-offset: 3px;
+				text-decoration-color: transparent;
+				transition: all 0.25s ease;
+
+				&:hover {
+					text-decoration-color: @naranj-accent;
+					color: @naranj-accent;
+				}
+			}
 		}
 	}
 
 	a {
 		text-decoration: none;
+		color: @primary;
+		transition: @naranj-transition;
+
+		&:hover {
+			color: @naranj-accent;
+		}
 	}
 
 	@media(min-width: @screen-desktop) {
-		padding: @triple;
+		padding: 20px;
+	}
+
+	@media(max-width: @screen-phone) {
+		padding: 15px;
+		margin-bottom: 15px;
+
+		.title {
+			font-size: 1rem;
+		}
 	}
 }
 
-// Browse sidebar block
+// ========================================
+// SIDEBAR BUTTONS - Academic hover
+// ========================================
+.pkp_block .content .cmp_button,
+.pkp_block .content button,
+.block_make_submission a {
+	display: inline-block;
+	padding: 12px 24px;
+	background: @naranj-primary;
+	color: #fff;
+	border: none;
+	border-radius: 30px;
+	font-weight: 600;
+	font-size: 0.9rem;
+	text-decoration: none;
+	text-align: center;
+	transition: all 0.3s ease;
+	letter-spacing: 0.3px;
+	box-shadow: 0 2px 8px rgba(26,95,122,0.2);
+
+	&:hover {
+		background: @naranj-accent;
+		transform: translateY(-3px);
+		box-shadow: 0 8px 20px rgba(230,126,34,0.3);
+		color: #fff;
+		text-decoration: none;
+	}
+
+	&:focus {
+		outline: 2px solid @naranj-accent;
+		outline-offset: 3px;
+	}
+}
+
+// ========================================
+// BROWSE SIDEBAR BLOCK
+// ========================================
 .block_browse {
 	font-size: @font-sml;
 
@@ -66,10 +158,10 @@
 		margin-top: @double;
 		font-size: @font-sml;
 		font-weight: @bold;
-		color: @text-light;
+		color: @naranj-primary-dark;
 
 		ul {
-			margin-top: calc(~"@{half} - 1px"); // account for border
+			margin-top: calc(~"@{half} - 1px");
 			padding-top: @half;
 			font-weight: @normal;
 		}
@@ -80,36 +172,130 @@
 	}
 
 	.current a {
-		padding-left: 0.5em;
-		border-left: 4px solid @bg-border-color;
-		color: @text-light;
+		padding-left: 0.8em;
+		border-left: 4px solid @naranj-accent;
+		color: @naranj-primary-dark;
 		cursor: text;
+		background: @naranj-primary-light;
+		border-radius: 0 6px 6px 0;
+		font-weight: 600;
 	}
 }
 
+// ========================================
+// INFORMATION & LANGUAGE BLOCKS
+// ========================================
 .block_information,
 .block_language_toggle {
 
 	a {
 		font-size: @font-sml;
+		display: inline-block;
+		padding: 4px 10px;
+		border-radius: 6px;
+		transition: all 0.25s ease;
+
+		&:hover {
+			background: @naranj-primary-light;
+			color: @naranj-primary-dark;
+		}
 	}
 }
 
+// ========================================
+// MAKE SUBMISSION BLOCK - Special emphasis
+// ========================================
 .block_make_submission {
+	background: linear-gradient(135deg, @naranj-primary, @naranj-primary-dark);
+	border: none;
+	box-shadow: @naranj-shadow-md;
+
+	.title {
+		color: #fff;
+		border-bottom-color: rgba(255,255,255,0.4);
+	}
+
+	.content {
+		color: rgba(255,255,255,0.9);
+	}
 
 	a {
-		&:extend(.cmp_button);
+		display: inline-block;
+		padding: 14px 28px;
+		background: #fff;
+		color: @naranj-primary-dark !important;
+		border: none;
+		border-radius: 30px;
+		font-weight: 700;
+		font-size: 0.95rem;
+		text-decoration: none;
+		text-align: center;
+		transition: all 0.3s ease;
+		letter-spacing: 0.5px;
+		box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+
+		&:hover {
+			background: @naranj-accent;
+			color: #fff !important;
+			transform: translateY(-3px);
+			box-shadow: 0 8px 25px rgba(230,126,34,0.4);
+		}
+
+		&:focus {
+			outline: 2px solid #ffdd99;
+			outline-offset: 3px;
+		}
 	}
 }
 
+// ========================================
+// SUBSCRIPTION BLOCK
+// ========================================
 .block_subscription {
 
 	.subscription_name {
 		margin-bottom: 0;
 		font-weight: @bold;
+		color: @naranj-primary-dark;
 	}
 
 	.subscription_membership {
 		margin-top: 0;
+		color: @text-light;
+	}
+
+	a {
+		display: inline-block;
+		padding: 4px 10px;
+		border-radius: 6px;
+		transition: all 0.25s ease;
+
+		&:hover {
+			background: @naranj-primary-light;
+			color: @naranj-primary-dark;
+		}
+	}
+}
+
+// ========================================
+// SIDEBAR KEYWORD/TAG LINKS
+// ========================================
+.pkp_block .content .pkp_tag,
+.pkp_block .content .tag {
+	display: inline-block;
+	padding: 4px 12px;
+	margin: 3px;
+	background: @naranj-primary-light;
+	border-radius: 20px;
+	font-size: 0.85rem;
+	color: @naranj-primary-dark;
+	text-decoration: none;
+	transition: all 0.25s ease;
+
+	&:hover {
+		background: @naranj-accent;
+		color: #fff;
+		transform: translateY(-1px);
+		box-shadow: 0 4px 10px rgba(230,126,34,0.3);
 	}
 }

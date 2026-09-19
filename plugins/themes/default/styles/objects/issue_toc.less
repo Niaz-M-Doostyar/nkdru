@@ -10,6 +10,15 @@
  */
 .obj_issue_toc {
 
+	// CUSTOM: Card style
+	background: #fff;
+	border-radius: 12px;
+	padding: 25px;
+	margin-bottom: 25px;
+	box-shadow: @naranj-shadow-sm;
+	border: 1px solid @bg-border-color;
+	box-sizing: border-box;
+
 	.cover {
 		display: block;
 		margin-bottom: @double;
@@ -50,9 +59,6 @@
 
 	.articles {
 		&:extend(.pkp_unstyled_list);
-
-		// Prevent articles from moving up into section divider
-		// if the title of a section is omitted from the table of contents
 		margin-top: calc(~"@{triple} + @{double}");
 	}
 

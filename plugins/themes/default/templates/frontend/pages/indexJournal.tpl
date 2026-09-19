@@ -8,13 +8,13 @@
  * @brief Display the index page for a journal
  *
  * @uses $currentJournal Journal This journal
- * @uses $journalDescription string Journal description from HTML text editor
  * @uses $homepageImage object Image to be displayed on the homepage
  * @uses $additionalHomeContent string Arbitrary input from HTML text editor
  * @uses $announcements array List of announcements
- * @uses $numAnnouncementsHomepage int Number of announcements to display on the
- *       homepage
+ * @uses $numAnnouncementsHomepage int Number of announcements to display
  * @uses $issue Issue Current issue
+ * @uses $carouselImages array Dynamic carousel images from plugin
+ * @uses $carouselBaseUrl string Base URL for carousel images
  *
  * @hook Templates::Index::journal []
  *}
@@ -22,9 +22,24 @@
 
 <div class="page_index_journal">
 
+	{* HOMEPAGE CAROUSEL *}
+	{if isset($carouselImages) && is_array($carouselImages) && $carouselImages|@count > 0}
+		<section class="homepage-carousel">
+			<div class="carousel">
+				{foreach from=$carouselImages item=image name=carouselLoop}
+					<div class="carousel-slide{if $smarty.foreach.carouselLoop.first} active{/if}">
+						<img src="{$carouselBaseUrl}{$image|escape:"url"}" alt="">
+					</div>
+				{/foreach}
+				<button class="carousel-prev">&#10094;</button>
+				<button class="carousel-next">&#10095;</button>
+			</div>
+		</section>
+	{/if}
+
 	{call_hook name="Templates::Index::journal"}
 
-	{if isset($carouselImages) && is_array($carouselImages) && $carouselImages|@count > 0}
+	{if $highlights->count()}
 		{include file="frontend/components/highlights.tpl" highlights=$highlights}
 	{/if}
 
@@ -49,9 +64,7 @@
 	{if $issue}
 		<section class="current_issue">
 			<a id="homepageIssue"></a>
-			<h2>
-				{translate key="journal.currentIssue"}
-			</h2>
+			<h2>{translate key="journal.currentIssue"}</h2>
 			<div class="current_issue_title">
 				{$issue->getIssueIdentification()|escape}
 			</div>
@@ -68,6 +81,6 @@
 			{$additionalHomeContent}
 		</div>
 	{/if}
-</div><!-- .page -->
+</div>
 
 {include file="frontend/components/footer.tpl"}

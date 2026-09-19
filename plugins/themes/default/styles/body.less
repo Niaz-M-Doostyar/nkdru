@@ -1,11 +1,7 @@
 /**
  * @file plugins/themes/default/styles/body.less
  *
- * Copyright (c) 2014-2021 Simon Fraser University
- * Copyright (c) 2003-2021 John Willinsky
- * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
- *
- * @brief Classes for site-wide elements and layout scaffolding
+ * @brief Site-wide layout: content, sidebar, footer
  */
 
 html,
@@ -15,26 +11,26 @@ body {
 	line-height: @line-base;
 	color: @text;
 	background: @bg;
+	overflow-x: hidden;
+	width: 100%;
 }
 
 a {
 	color: @primary;
+	transition: @naranj-transition;
 
 	&:hover,
 	&:focus {
 		color: @primary-lift;
+		text-decoration: underline;
 	}
 }
 
-
-// Page container widths
-.pkp_site_name_wrapper,
-.pkp_navigation_primary_wrapper,
-.pkp_navigation_user,
-.pkp_search_mobile,
+// ========================================
+// CONTENT + FOOTER CONTAINERS
+// ========================================
 .pkp_structure_content,
 .pkp_structure_footer {
-	.pkp_helpers_clear;
 	position: relative;
 	width: 100%;
 	margin: 0 auto;
@@ -55,126 +51,112 @@ a {
 	}
 }
 
-.has_site_logo {
-
-	.pkp_site_name,
-	.pkp_navigation_primary_wrapper {
-		width: auto;
-	}
-
-	.pkp_head_wrapper {
-		.pkp_helpers_clear;
-		position: relative;
+// CUSTOM: Wider containers
+@media( min-width: 1300px ) {
+	.pkp_structure_content,
+	.pkp_structure_footer {
+		max-width: @naranj-max-width;
 		width: 100%;
-		margin: 0 auto;
-		padding-right: @base;
-
-		@media( min-width: @screen-tablet ) {
-			width: @screen-tablet-container;
-			padding-left: 0;
-			padding-right: 0;
-		}
-
-		@media( min-width: @screen-desktop ) {
-			width: @screen-desktop-container;
-		}
-
-		@media( min-width: @screen-lg-desktop ) {
-			width: @screen-lg-desktop-container;
-		}
 	}
 }
 
-// Layout scaffold for content and sidebars
-.pkp_structure_main {
-	padding: @base;
+@media( min-width: 1600px ) {
+	.pkp_structure_content,
+	.pkp_structure_footer {
+		max-width: 1500px;
+		width: 100%;
+	}
 }
 
-@media( min-width: @screen-phone ) {
+// ========================================
+// FLEXBOX CONTENT + SIDEBAR
+// ========================================
+@media( min-width: @screen-desktop ) {
+	.pkp_structure_content {
+		padding-top: @triple;
+		display: flex;
+		align-items: flex-start;
+		gap: 40px;
+	}
 
 	.pkp_structure_main {
+		flex: 1;
+		min-width: 0;
+		width: auto;
+		float: none;
+		padding: 0 0 (@triple * 3) 0;
+
+		// Remove fake border dividers
+		&:before,
+		&:after {
+			display: none !important;
+			content: none !important;
+		}
+	}
+
+	.pkp_structure_sidebar {
+		width: 300px;
+		float: none;
+		flex-shrink: 0;
+	}
+}
+
+// Center content when no sidebar
+.pkp_structure_main:first-child:last-child {
+	@media(min-width: @screen-desktop) {
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: @quadruple;
+		max-width: 800px;
+	}
+}
+
+// Tablet/Mobile
+.pkp_structure_main {
+	padding: @base;
+
+	@media( min-width: @screen-phone ) {
 		padding: @double;
 	}
 }
 
-@media( min-width: @screen-tablet ) {
-
-	// Full-height borders wrapping primary content column
-	.pkp_structure_main {
-
-		&:before,
-		&:after {
-			content: '';
-			position: absolute;
-			top: 0;
-			left: 0;
-			bottom: 0;
-			width: 1px;
-			background: @bg-border-color;
-		}
-
-		&:after {
-			left: @screen-tablet-container;
-		}
-	}
+// ========================================
+// FOOTER
+// ========================================
+.pkp_structure_footer_wrapper {
+	width: 100%;
 }
 
-@media( min-width: @screen-desktop ) {
-
+// ========================================
+// RESPONSIVE COLLAPSE
+// ========================================
+@media( max-width: 991px ) {
 	.pkp_structure_content {
-		padding-top: @triple;
+		flex-direction: column;
+		gap: 20px;
+	}
+
+	.pkp_structure_main {
+		width: 100% !important;
+		max-width: 100% !important;
+		flex: auto;
 	}
 
 	.pkp_structure_sidebar {
-		float: right;
-		width: @sidebar-width;
+		width: 100% !important;
+	}
+}
+
+@media( max-width: @screen-phone ) {
+	.pkp_structure_content {
+		gap: 15px;
 	}
 
 	.pkp_structure_main {
-		float: left;
-		padding: 0 @triple (@triple * 3);
-		width: @screen-desktop-container - @sidebar-width;
-
-		&:after {
-			left: @screen-desktop-container - @sidebar-width;
-		}
+		padding: @half;
 	}
 }
 
-@media( min-width: @screen-lg-desktop ) {
-
-	.pkp_structure_main {
-		width: @screen-lg-desktop-container - @sidebar-width;
-
-		&:after {
-			left: @screen-lg-desktop-container - @sidebar-width;
-		}
-	}
-}
-
-// Center the content panel when no sidebar is present
-.pkp_structure_main:first-child:last-child {
-
-	@media(min-width: @screen-desktop) {
-		float: none;
-		margin-left: auto;
-		margin-right: auto;
-		margin-top: @quadruple;
-
-		// Aligns the left and right borders
-		@no-sidebar-margins: @sidebar-width / 2;
-		&:before {
-			left: @no-sidebar-margins;
-		}
-
-		&:after {
-			left: auto;
-			right: @no-sidebar-margins;
-		}
-	}
-}
-
-// Lock in images so they don't run outside their container
 img {
 	max-width: 100%;
 	width: auto;
